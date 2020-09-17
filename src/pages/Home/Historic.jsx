@@ -1,31 +1,10 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import styled from "styled-components";
 import { Typography } from "antd";
 
 const { Title } = Typography;
-
-const allDates = ["28/09/2020", "29/09/2020", "30/09/2020", "01/10/2020", "02/10/2020", "03/10/2020", "04/10/2020"];
-
-const ibovData = [
-   { last: 9.78, max: 9.88, min: 9.81, var: 0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: -0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: -0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: 0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: 0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: -0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: 0.93 },
-];
-
-const petrData = [
-   { last: 9.78, max: 9.88, min: 9.81, var: 0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: 0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: 0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: -0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: -0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: 0.93 },
-   { last: 9.78, max: 9.88, min: 9.81, var: -0.93 },
-];
 
 const ResultTableHeader = styled.div`
    border-top: 1px solid black;
@@ -50,7 +29,18 @@ const NegativeVariationMark = styled.div`
    display: inline;
 `;
 
-const Historic = () => {
+function Historic(props) {
+   useEffect(() => {
+      console.log(">>>>>>>>>>>>>>>>>>>>>");
+      console.log(props);
+   }, []);
+
+   useEffect(() => {
+      if (props.datasetStockA.length && props.datasetStockB.length) setPlotTable(true);
+   }, [props]);
+
+   const [plotTable, setPlotTable] = useState(false);
+
    return (
       <section style={{ marginTop: "4rem" }}>
          <Title>Histórico utilizado</Title>
@@ -114,40 +104,53 @@ const Historic = () => {
                   </tr>
                </thead>
                <tbody>
-                  {allDates.map((elem, i) => {
-                     return (
-                        <tr key={i}>
-                           <ResultTableData>{elem}</ResultTableData>
+                  {plotTable &&
+                     props.datasetStockA.map((elem, i) => {
+                        console.log("map -----------");
+                        console.log(props);
+                        console.log(props.datasetStockA[i], props.datasetStockB[i]);
 
-                           <ResultTableData style={{ paddingLeft: "12px" }}>{ibovData[i].last}</ResultTableData>
-                           <ResultTableData>{ibovData[i].max}</ResultTableData>
-                           <ResultTableData>{ibovData[i].min}</ResultTableData>
-                           <ResultTableData>
-                              {ibovData[i].var > 0 ? (
-                                 <PositiveVariationMark> {ibovData[i].var}% </PositiveVariationMark>
-                              ) : (
-                                 <NegativeVariationMark> {ibovData[i].var}% </NegativeVariationMark>
-                              )}
-                           </ResultTableData>
+                        return (
+                           <tr key={i}>
+                              <ResultTableData>{elem.date}</ResultTableData>
 
-                           <ResultTableData style={{ paddingLeft: "12px" }}>{petrData[i].last}</ResultTableData>
-                           <ResultTableData>{petrData[i].max}</ResultTableData>
-                           <ResultTableData>{petrData[i].min}</ResultTableData>
-                           <ResultTableData>
-                              {petrData[i].var > 0 ? (
-                                 <PositiveVariationMark> {petrData[i].var}% </PositiveVariationMark>
-                              ) : (
-                                 <NegativeVariationMark> {petrData[i].var}% </NegativeVariationMark>
-                              )}
-                           </ResultTableData>
-                        </tr>
-                     );
-                  })}
+                              <ResultTableData style={{ paddingLeft: "12px" }}>
+                                 {parseFloat(props.datasetStockA[i].close).toFixed(2)}
+                              </ResultTableData>
+                              <ResultTableData>{parseFloat(props.datasetStockA[i].high).toFixed(2)}</ResultTableData>
+                              <ResultTableData>{parseFloat(props.datasetStockA[i].low).toFixed(2)}</ResultTableData>
+                              <ResultTableData>
+                                 {parseFloat(props.datasetStockA[i].var) > 0 ? (
+                                    <PositiveVariationMark> {parseFloat(props.datasetStockA[i].var).toFixed(2)}% </PositiveVariationMark>
+                                 ) : (
+                                    <NegativeVariationMark> {parseFloat(props.datasetStockA[i].var).toFixed(2)}% </NegativeVariationMark>
+                                 )}
+                              </ResultTableData>
+
+                              <ResultTableData style={{ paddingLeft: "12px" }}>
+                                 {props.datasetStockB[i] ? parseFloat(props.datasetStockB[i].close).toFixed(2) : "-"}
+                              </ResultTableData>
+                              <ResultTableData>
+                                 {props.datasetStockB[i] ? parseFloat(props.datasetStockB[i].high).toFixed(2) : "-"}
+                              </ResultTableData>
+                              <ResultTableData>
+                                 {props.datasetStockB[i] ? parseFloat(props.datasetStockB[i].low).toFixed(2) : "-"}
+                              </ResultTableData>
+                              <ResultTableData>
+                                 {props.datasetStockB[i] && parseFloat(props.datasetStockB[i].var) > 0 ? (
+                                    <PositiveVariationMark> {parseFloat(props.datasetStockB[i].var).toFixed(2)}% </PositiveVariationMark>
+                                 ) : (
+                                    <NegativeVariationMark> {parseFloat(props.datasetStockB[i].var).toFixed(2)}% </NegativeVariationMark>
+                                 )}
+                              </ResultTableData>
+                           </tr>
+                        );
+                     })}
                </tbody>
             </table>
          </div>
       </section>
    );
-};
+}
 
 export default Historic;

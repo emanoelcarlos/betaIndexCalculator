@@ -22,29 +22,11 @@ function DispersionChart(props) {
    const [dispersionResult, setDispersionResult] = useState([]);
 
    const plotChart = (datasetStockA, datasetStockB) => {
-      let variationHistoryStockA = [];
-      let variationHistoryStockB = [];
-
-      datasetStockA.forEach((elem, index) => {
-         if (index !== 0) {
-            variationHistoryStockA.push((elem.close / datasetStockA[index - 1].close - 1)*100);
-         }
-      });
-
-      console.log(variationHistoryStockA);
-
-      datasetStockB.forEach((elem, index) => {
-         if (index !== 0) {
-            variationHistoryStockB.push((elem.close / datasetStockB[index - 1].close - 1)*100);
-         }
-      });
-
-      console.log(variationHistoryStockB);
-
+      
       let _dispersionResult = []
-      if (variationHistoryStockA.length <= variationHistoryStockB.length) {
-         for (let i = 0; i < variationHistoryStockA.length; i++) {
-            _dispersionResult.push({ x: variationHistoryStockA[i], y: variationHistoryStockB[i], r: 4});
+      if (datasetStockA.length <= datasetStockB.length) {
+         for (let i = 0; i < datasetStockA.length; i++) {
+            _dispersionResult.push({ x: datasetStockA[i].var, y: datasetStockB[i].var, r: 4});
          }
       }
 

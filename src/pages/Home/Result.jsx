@@ -29,6 +29,9 @@ const TableData = styled.td`
    color: #000000;
 `;
 
+// https://mathjs.org/download.html
+// https://www.investopedia.com/ask/answers/102714/how-do-you-calculate-beta-excel.asp
+
 const BetaResult = (props) => {
    return (
       <section style={{ marginTop: "4rem"}}>

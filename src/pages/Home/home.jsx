@@ -9,8 +9,9 @@ import Historic from "./Historic";
 import Selection from "./Selection";
 import Footer from "./Footer";
 import axios from "axios";
+import mathjs from "mathjs";
 
-const { Title } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 function Home() {
    const [stockA, setstockA] = useState([]);
@@ -46,13 +47,21 @@ function Home() {
 
    const retrieveStockHistory = (stockData) => {
       let result = [];
-      Object.keys(stockData["Time Series (Daily)"]).forEach((elem, index) => {
+      let data = stockData["Time Series (Daily)"];
+
+      Object.keys(data).forEach((elem, index) => {
          result.push({
-            timestamp: elem,
-            close: stockData["Time Series (Daily)"][elem]["4. close"],
-            high: stockData["Time Series (Daily)"][elem]["2. high"],
-            low: stockData["Time Series (Daily)"][elem]["3. low"],
+            date: elem,
+            close: data[elem]["4. close"],
+            high: data[elem]["2. high"],
+            low: data[elem]["3. low"],
          });
+      });
+
+      console.log(result);
+
+      result.map((elem, index) => {
+         return (elem.var = index > 0 ? (elem.close / result[index - 1].close - 1) * 100 : 0);
       });
       return result;
    };
@@ -69,11 +78,27 @@ function Home() {
             <Col xs={24} md={16}>
                <DispersionChart datasetStockA={stockA} datasetStockB={stockB} />
                <BetaResult />
-               <Historic />
+               <Historic datasetStockA={stockA} datasetStockB={stockB} />
 
                <Title level={2} style={{ marginTop: "4rem", textAlign: "center", padding: "0px 100px" }}>
                   Crie sua conta gratuita e acompanhe o beta de sua carteira diariamente
                </Title>
+
+               <Paragraph style={{ marginTop: "4rem", textAlign: "center", padding: "0px 100px" }}>
+                  Disclaimer
+               </Paragraph>
+
+               <Paragraph style={{ textAlign: "center", padding: "0px 100px" }}>
+                  As informações aqui disponibilizadas possuem caráter genérico e não constituem aconselhamento ou recomendação de
+                  investimentos, solicitação de compra ou venda de valores mobiliários, produtos ou quaisquer ativos
+                  financeiros. As Informações não se destinam e não foram objeto de avaliação sobre sua adequação ao
+                  perfil de investidores individuais ou grupo de investidores específicos. A incorporação das
+                  Informações a eventual decisão de investimento deverá ser efetuada após a análise independente pelo
+                  investidor, com base em todas as informações relevantes publicamente disponíveis. As Informações foram
+                  obtidas de fontes publicamente disponíveis e não foram objeto de investigação, sobre sua veracidade,
+                  consistência, completude, suficiência ou atualidade. O blog não poderá ser responsabilizada por
+                  quaisquer perdas e danos ou lucros cessantes porventura resultantes de sua utilização.
+               </Paragraph>
             </Col>
 
             <Col xs={0} md={4}></Col>
