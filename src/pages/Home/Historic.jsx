@@ -116,7 +116,7 @@ const Historic = () => {
                <tbody>
                   {allDates.map((elem, i) => {
                      return (
-                        <tr>
+                        <tr key={i}>
                            <ResultTableData>{elem}</ResultTableData>
 
                            <ResultTableData style={{ paddingLeft: "12px" }}>{ibovData[i].last}</ResultTableData>
