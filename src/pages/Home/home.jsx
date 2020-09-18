@@ -74,30 +74,32 @@ function Home() {
 
          <Row>
             <Col xs={0} md={4}></Col>
-
             <Col xs={24} md={16}>
                <DispersionChart datasetStockA={stockA} datasetStockB={stockB} />
-               <BetaResult />
+               <BetaResult datasetStockA={stockA} datasetStockB={stockB} />
                <Historic datasetStockA={stockA} datasetStockB={stockB} />
 
                <Title level={2} style={{ marginTop: "4rem", textAlign: "center", padding: "0px 100px" }}>
                   Crie sua conta gratuita e acompanhe o beta de sua carteira diariamente
                </Title>
+            </Col>
+            <Col xs={0} md={4}></Col>
+         </Row>
 
-               <Paragraph style={{ marginTop: "4rem", textAlign: "center", padding: "0px 100px" }}>
-                  Disclaimer
-               </Paragraph>
-
-               <Paragraph style={{ textAlign: "center", padding: "0px 100px" }}>
-                  As informações aqui disponibilizadas possuem caráter genérico e não constituem aconselhamento ou recomendação de
-                  investimentos, solicitação de compra ou venda de valores mobiliários, produtos ou quaisquer ativos
-                  financeiros. As Informações não se destinam e não foram objeto de avaliação sobre sua adequação ao
-                  perfil de investidores individuais ou grupo de investidores específicos. A incorporação das
-                  Informações a eventual decisão de investimento deverá ser efetuada após a análise independente pelo
-                  investidor, com base em todas as informações relevantes publicamente disponíveis. As Informações foram
-                  obtidas de fontes publicamente disponíveis e não foram objeto de investigação, sobre sua veracidade,
-                  consistência, completude, suficiência ou atualidade. O blog não poderá ser responsabilizada por
-                  quaisquer perdas e danos ou lucros cessantes porventura resultantes de sua utilização.
+         <Row>
+            <Col xs={0} md={4}></Col>
+            <Col xs={24} md={16}>
+               <Paragraph style={{ marginTop: "3rem", textAlign: "justify", lineHeight: "1rem"}}>
+                  Disclaimer: As informações aqui disponibilizadas possuem caráter educacional, genérico e não constituem
+                  aconselhamento ou recomendação de investimentos, solicitação de compra ou venda de valores
+                  mobiliários, produtos, serviços ou quaisquer ativos financeiros. As Informações não se destinam e não foram
+                  objeto de avaliação sobre sua adequação ao perfil de investidores individuais ou grupo de investidores
+                  específicos. A incorporação das Informações a eventual decisão de investimento deverá ser efetuada
+                  após a análise independente pelo investidor, com base em todas as informações relevantes publicamente
+                  disponíveis. As Informações foram obtidas de fontes publicamente disponíveis e não foram objeto de
+                  investigação, sobre sua veracidade, consistência, completude, suficiência ou atualidade. Este site não
+                  poderá ser responsabilizado por quaisquer perdas e danos ou lucros cessantes porventura resultantes de
+                  sua utilização.
                </Paragraph>
             </Col>
 

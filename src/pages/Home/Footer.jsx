@@ -9,7 +9,7 @@ const BackgroundFooter = styled.div`
    background-color: #15151a;
    width: 100%;
    color: #fff;
-   margin-top: 4rem;
+   margin-top: 2rem;
 `;
 
 const MenuItem = styled(Text)`

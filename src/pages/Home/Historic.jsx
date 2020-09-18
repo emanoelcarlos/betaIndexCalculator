@@ -30,10 +30,6 @@ const NegativeVariationMark = styled.div`
 `;
 
 function Historic(props) {
-   useEffect(() => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>");
-      console.log(props);
-   }, []);
 
    useEffect(() => {
       if (props.datasetStockA.length && props.datasetStockB.length) setPlotTable(true);
@@ -106,9 +102,9 @@ function Historic(props) {
                <tbody>
                   {plotTable &&
                      props.datasetStockA.map((elem, i) => {
-                        console.log("map -----------");
-                        console.log(props);
-                        console.log(props.datasetStockA[i], props.datasetStockB[i]);
+                        // console.log("map -----------");
+                        // console.log(props);
+                        // console.log(props.datasetStockA[i], props.datasetStockB[i]);
 
                         return (
                            <tr key={i}>
