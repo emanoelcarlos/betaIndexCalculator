@@ -1,7 +1,7 @@
 import * as React from "react";
 import "antd/dist/antd.css";
 import styled from "styled-components";
-import { Row, Col, Typography } from "antd"; 
+import { Row, Col, Typography } from "antd";
 import { Button } from "antd";
 
 const { Text, Title, Paragraph } = Typography;
@@ -63,22 +63,23 @@ const Banner = () => (
             <Col xs={0} md={2}></Col>
          </Row>
 
-         <Row style={{paddingTop: "2rem", paddingBottom: "4rem"}}>
+         <Row style={{ paddingTop: "2rem", paddingBottom: "4rem" }}>
             <Col xs={1} md={4}></Col>
             <Col xs={22} md={16}>
                <StyledTitle>Calculadora Beta</StyledTitle>
                <BannerParagraph>
-                  Beta (β) measures the volatility of a stock in relation to a market such as S&P 500 or any other
-                  index. It is an important measure to gauge the risk of a security.
+                  O Índice Beta (β) mede a volatilidade de um papel em relação a um indicador de mercado, como o IBOV ou
+                  qualquer outro índice. Ele é uma medida importante para medir o risco de um investimento.
                </BannerParagraph>
 
                <BannerParagraph>
-                  The market itself is considered to have a Beta of 1. Using regression analysis, the beta of the stock
-                  is calculated. If the beta of the stock is greater than 1, this means the stock’s prices are more
-                  volatile than the market, and vice verse. For example, if a stock has a beta of 1.2, this means that a
-                  1% change in the market index will bring about a 1.2% change in the stock’s price. Stocks with high
-                  beta are considered to be more risky compared to the ones with low beta.
+                  O próprio mercado é considerado como sendo Beta de valor 1. O beta de uma ação
+                  é calculado usando análise de regressão. Se o beta da ação for maior que 1, isso significa que os preços das ações são mais
+                  voláteis do que o mercado, e vice-versa. Por exemplo, se uma ação tem um beta de 1.2, isso significa
+                  que uma mudança de 1% no índice de mercado trará uma mudança de 1,2% no preço da ação. Ações com beta
+                  alto são consideradas mais arriscadas em comparação com aquelas com beta baixo.
                </BannerParagraph>
+               
                <BannerParagraph>Crie sua conta e acompanhe o beta de sua carteira gratuitamente.</BannerParagraph>
             </Col>
             <Col xs={1} md={4}></Col>

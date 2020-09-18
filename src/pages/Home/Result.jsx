@@ -134,7 +134,7 @@ const BetaResult = (props) => {
                   </tr>
                   <tr>
                      <TableLabel>Volatilidade IBOV a.d.</TableLabel>
-                     <TableData>{props.datasetStockA.length ? `${(100*math.std(props.datasetStockA.map(elem=>elem.close))).toFixed(2)}%` : "-"}</TableData>
+                     <TableData>{props.datasetStockA.length ? `${(math.std(props.datasetStockA.map(elem=>elem.close))).toFixed(2)}%` : "-"}</TableData>
                   </tr>
                   <tr>
                      <TableLabel>Volatilidade IBOV a.a.</TableLabel>
@@ -142,7 +142,7 @@ const BetaResult = (props) => {
                   </tr>
                   <tr>
                      <TableLabel>Volatilidade PETR4 a.d. </TableLabel>
-                     <TableData>{props.datasetStockB.length ? `${(100*math.std(props.datasetStockB.map(elem=>elem.close)).sqrt(252)).toFixed(2)}%` : "-"}</TableData>
+                     <TableData>{props.datasetStockB.length ? `${(math.std(props.datasetStockB.map(elem=>elem.close))).toFixed(2)}%` : "-"}</TableData>
                   </tr>
                   <tr>
                      <TableLabel>Volatilidade PETR4 a.a. </TableLabel>
