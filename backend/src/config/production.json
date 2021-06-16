@@ -1,0 +1,33 @@
+{
+  "server": {
+     "url": "integration.relogtechnology.com",
+     "port": 8011
+  },
+  "db": {
+     "url": "mongodb://mongo:27017/proxy_ayga_api?authSource=admin"
+  },
+  "security": {
+     "jwtPrivateKey": "secr3t",
+     "saltRounds": 10,
+     "enableHTTPS": true,
+     "key": "/security/keys/key.pem",
+     "certificate": "/security/keys/cert.pem",
+     "tokenLife": 3600
+  },
+  "swagger": {
+     "enabled": true,
+     "route": "/proxy/api-docs"
+  },
+  "log": {
+     "enabled": true,
+     "name": "",
+     "level": ""
+  },
+  "database_options": {
+     "user": "admin",
+     "pass": "EBYbeHkN6phswpYWw8qG",
+     "keepAlive": true,
+     "keepAliveInitialDelay": 300000,
+     "useNewUrlParser": true
+  }
+}
