@@ -9,111 +9,102 @@ import Historic from "./Historic";
 import Selection from "./Selection";
 import Footer from "./Footer";
 import axios from "axios";
-import mathjs from "mathjs"; 
-const finance = require("./financial")
-
+import _ from "lodash";
+import moment from "moment";
+const finance = require("./financial");
 
 const { Title, Text, Paragraph } = Typography;
 
 function Home() {
-   const [stockA, setstockA] = useState([]);
-   const [stockB, setstockB] = useState([]);
+  const [lastNDays, setLastNDays] = useState(200);
+  const [benchmarkHistory, setBenchmarkHistory] = useState({});
+  const [stocksHistory, setStocksHistory] = useState({});
 
-   const calculateBeta = async (stocks) => {
-      console.log(stocks);
+  const calculateBeta = async (benchmark, stocks) => {
+    console.log(benchmark, stocks);
+    await fetchBenchmarkPricesAndReturnsHistory(benchmark);
+    await fetchStockPricesAndReturnsHistory(stocks);
+  };
 
-      let startDate = 1567382400;
-      let endDate = 1600128000;
+  const fetchBenchmarkPricesAndReturnsHistory = async (benchmark) => {
+    setBenchmarkHistory({});
 
-      //TODO Buscar free stock api
-      console.log("resultStockA . . .");
-      let resultStockA = finance.fetchStock("PETR4.SA")
-      console.log(resultStockA);
+    const dateFrom = moment().subtract(lastNDays, "days").format("YYYY-MM-DD");
+    const dateTo = moment().format("YYYY-MM-DD");
 
-      // let resultStockA = await axios.get(
-      //    `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=CAML3.SA&apikey=YQ46CO1SKO2UIL8R`
-      // );
+    let newHistoric = {};
+    newHistoric[benchmark] = await getTickerHistoric(benchmark, dateFrom, dateTo);
+    setBenchmarkHistory(newHistoric);
+  };
 
-      let resultStockB = await axios.get(
-         `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=PETR4.SA&apikey=YQ46CO1SKO2UIL8R`
-      );
+  const fetchStockPricesAndReturnsHistory = async (stocks) => {
+    setStocksHistory({});
+    let updatedStocksHistory = {};
 
-      resultStockA = resultStockA.data;
-      resultStockB = resultStockB.data;
+    stocks.forEach(async (ticker) => {
+      const dateFrom = moment().subtract(lastNDays, "days").format("YYYY-MM-DD");
+      const dateTo = moment().format("YYYY-MM-DD");
 
-      console.log(resultStockA);
+      updatedStocksHistory[ticker] = await getTickerHistoric(ticker, dateFrom, dateTo);
 
-      setstockA(retrieveStockHistory(resultStockA));
-      setstockB(retrieveStockHistory(resultStockB));
+      setStocksHistory(updatedStocksHistory);
+    });
+  };
 
-      console.log(stockA);
-      console.log(stockB);
-   };
+  const getTickerHistoric = async (ticker, dateFrom, dateTo) => {
+    let historic = await axios.get(`http://localhost:3100/api/stocks?ticker=${ticker}.SA&from=${dateFrom}&to=${dateTo}&period=d`);
+    historic = historic.data.map((data) => _.pick(data, ["date", "close"]));
+    historic = _.reverse(historic);
+    historic = historic.filter((stockDay) => !!stockDay.close);
+    historic = calculateDailyVariation(historic);
+    return historic;
+  };
 
-   const retrieveStockHistory = (stockData) => {
-      let result = [];
-      let data = stockData["Time Series (Daily)"];
+  const calculateDailyVariation = (historic) => {
+    return historic.map((stockDay, index) => {
+      return _.set(stockDay, "var", index > 0 ? stockDay.close / historic[index - 1].close - 1 : 0);
+    });
+  };
 
-      Object.keys(data).forEach((elem, index) => {
-         result.push({
-            date: elem,
-            close: data[elem]["4. close"],
-            high: data[elem]["2. high"],
-            low: data[elem]["3. low"],
-         });
-      });
+  return (
+    <div>
+      <Banner />
 
-      console.log(result);
+      <Selection calculateBeta={calculateBeta} />
 
-      result.map((elem, index) => {
-         return (elem.var = index > 0 ? (elem.close / result[index - 1].close - 1) * 100 : 0);
-      });
-      return result;
-   };
+      <Row>
+        <Col xs={0} md={4}></Col>
+        <Col xs={24} md={16}>
+          {Object.keys(stocksHistory).length ==1 && <DispersionChart benchmarkHistory={benchmarkHistory} stocksHistory={stocksHistory} quantityOfDays={lastNDays}/>}
+          {/* <BetaResult datasetStockA={stockA} datasetStockB={stockB} /> */}
+          {/* <Historic datasetStockA={stockA} datasetStockB={stockB} /> */}
 
-   return (
-      <div>
-         <Banner />
+          <Title level={2} style={{ marginTop: "4rem", textAlign: "center", padding: "0px 100px" }}>
+            Crie sua conta gratuita e acompanhe o beta de sua carteira diariamente
+          </Title>
+        </Col>
+        <Col xs={0} md={4}></Col>
+      </Row>
 
-         <Selection calculateBeta={calculateBeta} />
+      <Row>
+        <Col xs={0} md={4}></Col>
+        <Col xs={24} md={16}>
+          <Paragraph style={{ marginTop: "3rem", textAlign: "justify", lineHeight: "1rem" }}>
+            Disclaimer: As informações aqui disponibilizadas possuem caráter educacional, genérico e não constituem aconselhamento ou recomendação de investimentos, solicitação de
+            compra ou venda de valores mobiliários, produtos, serviços ou quaisquer ativos financeiros. As Informações não se destinam e não foram objeto de avaliação sobre sua
+            adequação ao perfil de investidores individuais ou grupo de investidores específicos. A incorporação das Informações a eventual decisão de investimento deverá ser
+            efetuada após a análise independente pelo investidor, com base em todas as informações relevantes publicamente disponíveis. As Informações foram obtidas de fontes
+            publicamente disponíveis e não foram objeto de investigação, sobre sua veracidade, consistência, completude, suficiência ou atualidade. Este site não poderá ser
+            responsabilizado por quaisquer perdas e danos ou lucros cessantes porventura resultantes de sua utilização.
+          </Paragraph>
+        </Col>
 
-         <Row>
-            <Col xs={0} md={4}></Col>
-            <Col xs={24} md={16}>
-               <DispersionChart datasetStockA={stockA} datasetStockB={stockB} />
-               <BetaResult datasetStockA={stockA} datasetStockB={stockB} />
-               <Historic datasetStockA={stockA} datasetStockB={stockB} />
+        <Col xs={0} md={4}></Col>
+      </Row>
 
-               <Title level={2} style={{ marginTop: "4rem", textAlign: "center", padding: "0px 100px" }}>
-                  Crie sua conta gratuita e acompanhe o beta de sua carteira diariamente
-               </Title>
-            </Col>
-            <Col xs={0} md={4}></Col>
-         </Row>
-
-         <Row>
-            <Col xs={0} md={4}></Col>
-            <Col xs={24} md={16}>
-               <Paragraph style={{ marginTop: "3rem", textAlign: "justify", lineHeight: "1rem"}}>
-                  Disclaimer: As informações aqui disponibilizadas possuem caráter educacional, genérico e não constituem
-                  aconselhamento ou recomendação de investimentos, solicitação de compra ou venda de valores
-                  mobiliários, produtos, serviços ou quaisquer ativos financeiros. As Informações não se destinam e não foram
-                  objeto de avaliação sobre sua adequação ao perfil de investidores individuais ou grupo de investidores
-                  específicos. A incorporação das Informações a eventual decisão de investimento deverá ser efetuada
-                  após a análise independente pelo investidor, com base em todas as informações relevantes publicamente
-                  disponíveis. As Informações foram obtidas de fontes publicamente disponíveis e não foram objeto de
-                  investigação, sobre sua veracidade, consistência, completude, suficiência ou atualidade. Este site não
-                  poderá ser responsabilizado por quaisquer perdas e danos ou lucros cessantes porventura resultantes de
-                  sua utilização.
-               </Paragraph>
-            </Col>
-
-            <Col xs={0} md={4}></Col>
-         </Row>
-
-         <Footer />
-      </div>
-   );
+      <Footer />
+    </div>
+  );
 }
 
 export default Home;

@@ -8,11 +8,11 @@
         "port": 3001
     },
     "db": {
-        "url": "mongodb://localhost:27017/recicla_test",
-        "mongodb_container": "mongodb://db:27017/recicla_test"
+        "url": "mongodb://localhost:27017/my-db",
+        "mongodb_container": "mongodb://db:27017/my-db"
     },
     "security": {
-        "jwtPrivateKey": "secr3t",
+        "jwtPrivateKey": "gb3250sd247sbdl23aghj4krt",
         "saltRounds": 10,
         "enableHTTPS": false,
         "key": "",

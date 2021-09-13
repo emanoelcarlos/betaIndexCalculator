@@ -7,60 +7,85 @@ import { Bubble } from "react-chartjs-2";
 const { Title } = Typography;
 
 function DispersionChart(props) {
-   
-   useEffect(() => {
-      console.log("Use effect!");
-      console.log(props.datasetStockA, props.datasetStockB);
-   }, []);
+  const [benckmarkTicker, setBenchmarkTicker] = useState("");
+  const [stockTicker, setStockTicker] = useState("");
+  const [quantityOfDays, setQuantityOfDays] = useState(0);
+  const [dispersionResult, setDispersionResult] = useState([]);
 
-   useEffect(() => {
-      console.log("Use effect!");
-      console.log(props.datasetStockA, props.datasetStockB);
-      plotChart(props.datasetStockA, props.datasetStockB);
-   }, [props]);
+  useEffect(() => {
+    plotChart(props.benchmarkHistory, props.stocksHistory, props.quantityOfDays);
+  }, [props]);
 
-   const [dispersionResult, setDispersionResult] = useState([]);
+  const plotChart = (benchmarkHistory, stocksHistory, quantityOfDays) => {
+    let _dispersionResult = [];
+    let benchmarkData = Object.values(benchmarkHistory);
+    let stockData = Object.values(stocksHistory);
 
-   const plotChart = (datasetStockA, datasetStockB) => {
-      
-      let _dispersionResult = []
-      if (datasetStockA.length <= datasetStockB.length) {
-         for (let i = 0; i < datasetStockA.length; i++) {
-            _dispersionResult.push({ x: datasetStockA[i].var, y: datasetStockB[i].var, r: 4});
-         }
+    if (benchmarkData.length && stockData.length) {
+      setBenchmarkTicker(Object.keys(benchmarkHistory)[0]);
+      setStockTicker(Object.keys(stocksHistory)[0]);
+      setQuantityOfDays(quantityOfDays);
+
+      benchmarkData = benchmarkData[0];
+      stockData = stockData[0];
+
+      //TODO: deal with different array sizes
+      if (benchmarkData.length <= stockData.length) {
+        for (let i = 0; i < benchmarkData.length; i++) {
+          _dispersionResult.push({ x: benchmarkData[i].var, y: stockData[i].var, r: 4 });
+        }
       }
+    }
 
-      setDispersionResult(_dispersionResult);
+    setDispersionResult(_dispersionResult);
+  };
 
-      console.log(_dispersionResult);
-   };
-
-   return (
-      <section style={{ marginTop: "4rem" }}>
-         <Title>Gráfico de dispersão</Title>
-         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <div>
-               {
-                  <Bubble
-                     data={{
-                        datasets: [
-                           {
-                              label: "Dispersão",
-                              data: dispersionResult,
-                              backgroundColor: "lightblue",
-                           },
-                        ],
-                     }}
-                  />
-               }
-            </div>
-            <div>
-               No gráfico acima temos o retorno diário da PETR4 no eixo Y e do IBOV no Eixo X. O período analisado
-               reflete os últimos 3 anos. Clique aqui para mudar configurações avançadas.
-            </div>
-         </div>
-      </section>
-   );
+  return (
+    <section style={{ marginTop: "4rem" }}>
+      <Title>Gráfico de dispersão</Title>
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <div>
+          {
+            <Bubble
+              data={{
+                datasets: [
+                  {
+                    label: "Dispersão",
+                    data: dispersionResult,
+                    backgroundColor: "lightblue",
+                  },
+                ],
+              }}
+              options={{
+                scales: {
+                  xAxes: [
+                    {
+                      scaleLabel: {
+                        labelString: benckmarkTicker,
+                        display: true,
+                      },
+                    },
+                  ],
+                  yAxes: [
+                    {
+                      scaleLabel: {
+                        labelString: stockTicker,
+                        display: true,
+                      },
+                    },
+                  ],
+                },
+              }}
+            />
+          }
+        </div>
+        <div>
+          No gráfico acima temos o retorno diário de {stockTicker} no eixo Y e de {benckmarkTicker} no Eixo X. O período analisado reflete os últimos {quantityOfDays} dias. 
+          A quantidade de dias pode ser ajustada nas configurações avançadas acima.
+        </div>
+      </div>
+    </section>
+  );
 }
 
 //    var myBubbleChart = new Chart(ctx, {
